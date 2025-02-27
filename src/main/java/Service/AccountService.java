@@ -18,6 +18,10 @@ public class AccountService {
         return accountDAO.insertAccount(account);
     }
 
+    public Account duplicatedAccount(String username) {
+        return accountDAO.duplicateAccount(username);
+    }
+
     public Account loginAccount(Account account) {
         return accountDAO.checkAccount(account);
     }
