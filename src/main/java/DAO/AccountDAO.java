@@ -14,14 +14,10 @@ public class AccountDAO {
             ps.setString(1, username);
             ps.setString(2, password);
             
-            int affectedRows = ps.executeUpdate();
-
-            if(affectedRows == 0) {
-                return null;
-            }
+            ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
-            if(rs.next()){
+            while(rs.next()){
                 return new Account(rs.getInt(1), username, password);
             }
         } catch(SQLException e) {
@@ -38,7 +34,7 @@ public class AccountDAO {
             ps.setString(1, username);
             
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
+            while(rs.next()) {
                 return new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
             }
         } catch(SQLException e) {

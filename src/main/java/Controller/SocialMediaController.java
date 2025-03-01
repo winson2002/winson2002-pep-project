@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.util.List;
+
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
  * found in readme.md as well as the test cases. You should
@@ -83,7 +85,8 @@ public class SocialMediaController {
     }
 
     private void getAllMessageHandler(Context ctx) {
-
+        List<Message> messages = messageService.getAllMessages();
+        ctx.json(messages).status(200);
     }
 
     private void getMessageWithIDHandler(Context ctx) {
@@ -109,6 +112,4 @@ public class SocialMediaController {
     private void exampleHandler(Context context) {
         context.json("sample text");
     }
-
-
 }
