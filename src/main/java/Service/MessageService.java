@@ -31,4 +31,14 @@ public class MessageService {
     public List<Message> getAllMessages() {
         return messageDAO.getAllBooks();
     }
+
+    public Message getMessageByID(int messageID) {
+        return messageDAO.getMessageByID(messageID);
+    }
+
+    public Message deleteMessageByID(int messageID) {
+        Message deletedMessage = messageDAO.getMessageByID(messageID);
+        messageDAO.deleteMessage(messageID);
+        return deletedMessage;
+    }
 }

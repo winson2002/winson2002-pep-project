@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import static org.mockito.Mockito.mockConstruction;
+
 import java.util.List;
 
 /**
@@ -37,9 +39,9 @@ public class SocialMediaController {
         app.post("login", this::loginHandler);
         app.post("messages", this::createMessageHandler);
         app.get("messages", this::getAllMessageHandler);
-        app.get("messages/{message_id}", this::getMessageWithIDHandler);
-        app.delete("messages/{message_id}", this::deleteMessageWithIDHandler);
-        app.patch("messages/{message_id}", this::updateMessageWithIdHandler);
+        app.get("messages/{message_id}", this::getMessageByIDHandler);
+        app.delete("messages/{message_id}", this::deleteMessageByIDHandler);
+        app.patch("messages/{message_id}", this::updateMessageByIdHandler);
         app.get("accounts/{account_id}/messages", this::getMessageWithAccountIDHandler);
 
         return app;
@@ -89,15 +91,29 @@ public class SocialMediaController {
         ctx.json(messages).status(200);
     }
 
-    private void getMessageWithIDHandler(Context ctx) {
-
+    private void getMessageByIDHandler(Context ctx)  {
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message messageByID = messageService.getMessageByID(message_id);
+        if(messageByID != null) {
+            ctx.json(messageByID).status(200);
+        }
+        else {
+            ctx.result("").status(200);
+        }
     }
 
-    private void deleteMessageWithIDHandler(Context ctx) {
-
+    private void deleteMessageByIDHandler(Context ctx) {
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message deleteMessage = messageService.deleteMessageByID(message_id);
+        if(deleteMessage != null) {
+            ctx.json(deleteMessage).status(200);
+        }
+        else {
+            ctx.result("").status(200);
+        }
     }
 
-    private void updateMessageWithIdHandler(Context ctx) {
+    private void updateMessageByIdHandler(Context ctx) {
 
     }
 
