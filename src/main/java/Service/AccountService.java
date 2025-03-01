@@ -14,15 +14,27 @@ public class AccountService {
         this.accountDAO = accountDAO;
     }
 
-    public Account registerAccount(Account account) {
-        return accountDAO.insertAccount(account);
+    public Account registerAccount(String username, String password) {
+        if(username == null || username.trim().isEmpty()) {
+            return null;
+        }
+
+        if(password == null || password.length() < 4) {
+            return null;
+        }
+
+        if(accountDAO.getAccount(username) != null) {
+            return null;
+        }
+
+        return accountDAO.insertAccount(username, password);
     }
 
-    public Account duplicatedAccount(String username) {
-        return accountDAO.duplicateAccount(username);
-    }
-
-    public Account loginAccount(Account account) {
-        return accountDAO.checkAccount(account);
+    public Account login(String username, String password) {
+        Account account = accountDAO.getAccount(username);
+        if(account != null && account.getPassword().equals(password)) {
+            return account;
+        }
+        return null;
     }
 }

@@ -47,36 +47,39 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
 
-        if(account.getUsername() == null || account.getUsername().trim().isEmpty()) {
-            ctx.json("Username cannot be blank").status(400);
-            return;
-        }
-
-        if(account.getPassword() == null || account.getPassword().length() < 4) {
-            ctx.json("Password must be longer than 4 characters").status(400);
-            return;
-        }
-
-        Account existingAccount = accountService.duplicatedAccount(account.getUsername());
-        if(existingAccount != null) {
-            ctx.json("Username already exist").status(400);
-        }
-
-        Account registeredAccount = accountService.registerAccount(account);
-        if(registeredAccount != null) {
-            ctx.json(registeredAccount).status(200);
+        Account registerAccount = accountService.registerAccount(account.getUsername(), account.getPassword());
+        if(registerAccount != null) {
+            ctx.json(registerAccount).status(200);
         }
         else {
-            ctx.json("Registration failed due to unknown error").status(400);
+            ctx.status(400);
         }
     }
 
-    private void loginHandler(Context ctx) {
-
+    private void loginHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        
+        Account validAccount = accountService.login(account.getUsername(), account.getPassword());
+        if(validAccount != null) {
+            ctx.json(validAccount).status(200);
+        }
+        else {
+            ctx.status(401);
+        }
     }
 
-    private void createMessageHandler(Context ctx) {
+    private void createMessageHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
 
+        Message postingMessage = messageService.createMessage(message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
+        if(postingMessage != null) {
+            ctx.json(postingMessage).status(200);
+        }
+        else {
+            ctx.status(400);
+        }
     }
 
     private void getAllMessageHandler(Context ctx) {
