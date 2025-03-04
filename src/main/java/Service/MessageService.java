@@ -41,4 +41,20 @@ public class MessageService {
         messageDAO.deleteMessage(messageID);
         return deletedMessage;
     }
+
+    public Message updateMessageByID(int messageID, String text) {
+        if(text == null || text.trim().isEmpty() || text.length() > 255) {
+            return null;
+        }
+
+        if(messageDAO.getMessageByID(messageID) != null) {
+            messageDAO.updateMessage(messageID, text);
+            return messageDAO.getMessageByID(messageID);
+        }
+        return null;
+    }
+
+    public List<Message> getMessagesByAccount(int accountID) {
+        return messageDAO.getAllMessagesByAccount(accountID);
+    }
 }
