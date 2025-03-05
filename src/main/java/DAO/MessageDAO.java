@@ -1,6 +1,5 @@
 package DAO;
 
-import Model.Account;
 import Model.Message;
 import Util.ConnectionUtil;
 
@@ -9,6 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageDAO {
+    /**
+     * Inserting message info into the database.
+     * 
+     * @param userID account ID belonging to the user
+     * @param text the message
+     * @param time when the message was inserted
+     * @return the inserted message
+     */
     public Message postMessage(int userID, String text, long time) {
         try(Connection connection = ConnectionUtil.getConnection();) {
             String sql = "INSERT INTO message(posted_by, message_text, time_posted_epoch) VALUES(?, ?, ?)";
@@ -30,6 +37,12 @@ public class MessageDAO {
         return null;
     }
 
+    /**
+     * Check if the account ID is in the database.
+     * 
+     * @param userID account ID belonging to the user
+     * @return the retrieved messages
+     */
     public Message realPerson(int userID) {
         try(Connection connection = ConnectionUtil.getConnection();) {
             String sql = "SELECT * FROM message WHERE posted_by=?";
@@ -48,6 +61,11 @@ public class MessageDAO {
         return null;
     }
 
+    /**
+     * Store all the messages in the database into a list.
+     * 
+     * @return all messages
+     */
     public List<Message> getAllBooks() {
         List<Message> messages = new ArrayList<>();
         try(Connection connection = ConnectionUtil.getConnection();) {
@@ -66,6 +84,12 @@ public class MessageDAO {
         return messages;
     }
 
+    /**
+     * Search message using message ID in the database.
+     * 
+     * @param messageID ID associated with the message
+     * @return the retrieved message
+     */
     public Message getMessageByID(int messageID) {
         try(Connection connection = ConnectionUtil.getConnection();) {
             String sql = "SELECT * FROM message WHERE message_id=?";
@@ -84,7 +108,12 @@ public class MessageDAO {
         return null;
     }
 
-    public Message deleteMessage(int messageID) {
+    /**
+     * Deletes message associated with the message ID from the database.
+     * 
+     * @param messageID ID associated with the message
+     */
+    public void deleteMessage(int messageID) {
         try(Connection connection = ConnectionUtil.getConnection();) {
             String sql = "DELETE FROM message WHERE message_id=?";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -95,10 +124,15 @@ public class MessageDAO {
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }
-        return null;
     }
 
-    public Message updateMessage(int messageID, String text) {
+    /**
+     * Update current message with new message using message ID.
+     * 
+     * @param messageID ID associated with the message
+     * @param text new message
+     */
+    public void updateMessage(int messageID, String text) {
         try(Connection connection = ConnectionUtil.getConnection();) {
             String sql = "UPDATE message SET message_text=? WHERE message_id=?";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -110,9 +144,14 @@ public class MessageDAO {
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }
-        return null;
     }
 
+    /**
+     * Search all messages associated with user ID in the database.
+     * 
+     * @param accountID ID belonging to the user
+     * @return list of all messages
+     */
     public List<Message> getAllMessagesByAccount(int accountID) {
         List<Message> messages = new ArrayList<>();
         try(Connection connection = ConnectionUtil.getConnection();) {

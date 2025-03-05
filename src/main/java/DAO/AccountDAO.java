@@ -6,6 +6,13 @@ import Util.ConnectionUtil;
 import java.sql.*;
 
 public class AccountDAO {
+    /**
+     * Inserting account info into the database.
+     * 
+     * @param username unique identifier for the user
+     * @param password associated with the username
+     * @return the inserted account
+     */
     public Account insertAccount(String username, String password) {
         try(Connection connection = ConnectionUtil.getConnection();) {
             String sql = "INSERT INTO account(username, password) VALUES(?, ?)";
@@ -26,6 +33,12 @@ public class AccountDAO {
         return null;
     }
 
+    /**
+     * Selecting an account that matches the username.
+     * 
+     * @param username what we need
+     * @return the retrieved account
+     */
     public Account getAccount(String username) {
         try(Connection connection = ConnectionUtil.getConnection();) {
             String sql = "SELECT * FROM account WHERE username=?";
